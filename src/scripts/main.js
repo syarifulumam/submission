@@ -28,9 +28,9 @@ function main() {
         }
     }
 
-    const recipeMeal = async (idMeal) => {
+    const recipeMeal = async (nameMeal) => {
         try {
-            const response = await fetch(`${baseUrl}lookup.php?i=${idMeal}`);
+            const response = await fetch(`${baseUrl}search.php?s=${nameMeal}`);
             const responseJson = await response.json();
             if (responseJson.error) {
                 showResponseMessage();
@@ -76,7 +76,7 @@ function main() {
             listCategories.innerHTML += `
                 <div class="col-md-3 mt-3">
                     <div class="card">
-                        <img src="${meal.strMealThumb}" class="card-img-top" id="${meal.idMeal}">
+                        <img src="${meal.strMealThumb}" class="card-img-top" id="${meal.strMeal}">
                         <div class="card-body">
                             <h5 class="card-title">${meal.strMeal}</h5>
                         </div>
@@ -107,8 +107,13 @@ function main() {
                     <div class="col-md-8">
                     <div class="card-body">
                         <h5 class="card-title">${meals[0].strMeal}</h5>
-                        <p class="card-text">${meals[0].strInstructions}</p>
-                        </div>
+                        <p class="card-text">${meals[0].strInstructions}</p>`
+        for (const [key, value] of Object.entries(meals[0])) {
+            if (key.startsWith('strIngredient') && value !== '') {
+                `<p class="card-text">-${value}</p>`;
+            }
+        }
+        `</div>
                     </div>
                 </div>
             </div>
@@ -123,14 +128,22 @@ function main() {
     };
 
     document.addEventListener("DOMContentLoaded", () => {
+        const keyword = document.querySelector("#keyword");
+        const submit = document.querySelector("#submit");
+
         getDataCategories();
 
         //event menu navbar
         const navItem = document.querySelectorAll(".nav-item");
         navItem.forEach(navitem => {
             navitem.addEventListener("click", event => {
-                console.log(event.target.id);
+                listDataCategories(event.target.id);
             });
+        });
+
+        //cari resep
+        submit.addEventListener("click", event => {
+            recipeMeal(keyword.value);
         });
 
     });
