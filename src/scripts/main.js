@@ -107,10 +107,13 @@ function main() {
                     <div class="col-md-8">
                     <div class="card-body">
                         <h5 class="card-title">${meals[0].strMeal}</h5>
-                        <p class="card-text">${meals[0].strInstructions}</p>`
+                        <p class="card-text">${meals[0].strInstructions}</p>
+                        <h2>Ingredient</h2>
+                        <p class="ingredient"></p>`
+        const ingredient = document.querySelector(".ingredient");
         for (const [key, value] of Object.entries(meals[0])) {
             if (key.startsWith('strIngredient') && value !== '') {
-                `<p class="card-text">-${value}</p>`;
+                ingredient.innerHTML += `<p class="card-text">- ${value}</p>`;
             }
         }
         `</div>
